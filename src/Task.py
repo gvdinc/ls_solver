@@ -3,9 +3,9 @@ import numpy
 
 
 class Task:
-    def __init__(self, accuracy):
+    def __init__(self, matrix, accuracy):
         self.eps = accuracy
-        self.matrix = None
+        self.matrix = matrix
         self.solved = False
 
     def is_solved(self):

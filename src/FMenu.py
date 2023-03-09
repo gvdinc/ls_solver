@@ -1,7 +1,7 @@
 import os
 import keyboard
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
 class FMenu:
@@ -32,14 +32,14 @@ class FMenu:
                 width = len(mass)
             elif width != len(mass):
                 print("Wrong data")
-                return False
+                return None
             # checked - data correct
             height += 1
             matrix.append(mass)
+        file.close()
         # file read successfully
-        matrix = pd.DataFrame(matrix)
-        print(matrix)
-        return True
+        matrix = np.array(matrix)
+        return matrix
 
     def _render_menu(self):
         while not self.choice_status:
