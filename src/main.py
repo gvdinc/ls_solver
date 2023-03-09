@@ -5,9 +5,13 @@ from src.Task import Task
 
 
 def main():
-    menu = FMenu()
-    matrix = menu.choose_file()
-    accuracy = 0.01  # float(input("Input accuracy: "))
+    accuracy = float(input("Input accuracy: "))
+    manual = input("use manual mode? Y/N: ")
+    if manual.lower().strip() == 'n':
+        menu = FMenu()
+        matrix = menu.choose_file()
+    else:
+        matrix = FMenu.type_matrix()
     solver = Solver(Task(matrix, accuracy))
     res = solver.solve_ls()
     if res is not None:

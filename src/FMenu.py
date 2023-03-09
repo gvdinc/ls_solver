@@ -67,3 +67,21 @@ class FMenu:
         elif cmd == "last":
             if self.choice_id > 0:
                 self.choice_id -= 1
+
+    @staticmethod
+    def type_matrix():
+        print('matrix size:', end=' ')
+        size = int(input())
+        matrix = []
+        for i in range(size):
+            xline = []
+            for j in range(size + 1):
+                print("x[", i, "][", j, ']:', end=" ")
+                xline.append(int(input()))
+            matrix.append(xline)
+        print("result: ")
+        for line in matrix:
+            for x in line:
+                print(x, end=" ")
+            print('')
+        return matrix
