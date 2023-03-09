@@ -1,4 +1,5 @@
 import itertools
+import sys
 
 import numpy as np
 from src.Task import Task
@@ -9,9 +10,12 @@ class Solver:
     def __init__(self, task):
         self.task = task
         self.matrix = task.matrix
+        self.a = task.matrix[:, :-1]
 
     def solve_ls(self):
-        self._make_convergent()
+        is_transformed = self.transform_matrix()
+        if not is_transformed:
+            print("convergence impossible")
         m_size = len(self.matrix)
         C = []
         d = []
@@ -70,3 +74,54 @@ class Solver:
                 self.matrix = permutation
                 return
         print("Not convergent")
+
+    def transform_matrix(self):
+        dictionary = [set() for _ in range(len(self.a))]
+        counter = 0
+
+        # Собираем массив множеств подходящих строк
+        # Собираем массив множеств подходящих строк
+        for i in range(len(self.a)):
+            for j in range(len(self.a[i])):
+                s = sum(abs(x) for x in self.a[i][:j]) + sum(abs(x) for x in self.a[i][j + 1:])
+                if abs(self.a[i][j]) >= s:
+                    dictionary[j].add(i)
+                if abs(self.a[i][j]) > s:
+                    counter += 1
+
+        if not counter:
+            return False
+
+        if not self._check_dict(dictionary): return False
+
+        maxi = 20
+        while maxi > 2:
+            max_len = 0
+            for i in range(len(dictionary)):
+                for j in range(len(dictionary)):
+                    if i != j and len(dictionary[j]) == 1:
+                        dictionary[i] = dictionary[i] - dictionary[j]
+                        max_len = max(max_len, len(dictionary[i]))
+            maxi = max_len
+
+        self._check_dict(dictionary)
+
+        for i in range(len(dictionary)):
+            if len(dictionary[i]) == 2:
+                dictionary[i].pop()
+                for j in range(i + 1, len(dictionary)):
+                    dictionary[j] = dictionary[j] - dictionary[i]
+
+        new_matrix = []
+        for position in dictionary:
+            pos = (list(position)[0])
+            new_matrix.append(self.matrix[pos])
+        self.matrix = new_matrix
+        return True
+
+    @staticmethod
+    def _check_dict(dictionary):
+        for i in dictionary:
+            if not i:
+                return False
+        return True
